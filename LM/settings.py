@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Dictionnaire',
     #'users',
-    'django_extensions',
+    #'django_extensions',
     'rest_framework',
     'rest_framework_pagination',
     'django_filters',
