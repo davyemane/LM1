@@ -43,13 +43,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_pagination',
     'django_filters',
-    "corsheaders",
+    'corsheaders',  # Ajouté ici
     'algoliasearch_django',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Ajouté ici
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -94,8 +95,10 @@ DATABASES = {
        }
    }
 }
+
+# Configuration de CORS
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWS_CREDENTIALS =True
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_METHODS = [
     "DELETE",
@@ -140,6 +143,7 @@ ALGOLIA = {
   'APPLICATION_ID': 'JQR8BKWTI8',
   'API_KEY': '2bf5093120fa435ad74e1d229f893319'
 }
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
