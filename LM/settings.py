@@ -84,15 +84,8 @@ WSGI_APPLICATION = 'LM.wsgi.application'
 
 DATABASES = {
    'default': {
-       'ENGINE': 'django.db.backends.mysql',
-       'NAME': 'lm',
-       'USER': 'davy',
-       'PASSWORD': 'Felicien@2002',
-       'HOST': 'localhost',
-       'PORT': '3306',
-        'OPTIONS':{
-           'init_command':"SET sql_mode='STRICT_TRANS_TABLES'",
-       }
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': BASE_DIR / 'db.sqlite3',
    }
 }
 
