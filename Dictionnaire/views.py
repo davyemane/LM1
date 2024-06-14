@@ -4,7 +4,7 @@ from .models import *
 from .serializer import *
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, permissions
-
+from django.http import JsonResponse
 from rest_framework import status
 from . import client
 from rest_framework.pagination import PageNumberPagination
@@ -12,6 +12,7 @@ import pickle
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 import os
+from Dictionnaire import *
 
 class TraductionPagination(PageNumberPagination):
     page_size = 10
@@ -81,33 +82,29 @@ class SearchListView(generics.ListAPIView):
 
 
 
-import joblib  # Si vous avez sauvegardé votre modèle avec joblib
-def translate_with_model(model, text, source_lang, target_lang):
-    # Exemple de fonction pour la traduction avec votre modèle
-    # Ici, vous devez implémenter la logique de traduction en utilisant votre modèle
-    # Remarque : Ceci est un exemple fictif, adaptez-le à votre modèle réel
-    translated_text = model.translate(text, source_lang, target_lang)
-    return translated_text
+from easynmt import EasyNMT
+
 @api_view(['GET', 'POST'])
 def translate_text(request):
+    # Initialiser le traducteur EasyNMT
+    translator = EasyNMT('opus-mt')
+
     if request.method == 'GET':
         text = request.GET.get('text', '')
-        source_lang = request.GET.get('source_lang', 'fr')
-        target_lang = request.GET.get('target_lang', 'en')
-        
-        # Charger le modèle depuis model.pkl
-        model_path = '/home/davy/Desktop/emane bile/emane/UIECC S8/lm/LM/model.pkl'  # Chemin vers votre modèle
-        model = joblib.load(model_path)  # Charger le modèle avec joblib
-        
+        source_lang = request.GET.get('source_lang', '')
+        target_lang = request.GET.get('target_lang', '')
+
         # Effectuer la traduction
-        translated_text = translate_with_model(model, text, source_lang, target_lang)
-        
+        translated_text = translator.translate(text, source_lang=source_lang, target_lang=target_lang)
         return JsonResponse({"translated_text": translated_text}, status=200)
     
     elif request.method == 'POST':
-        # Logique pour les requêtes POST si nécessaire
-        pass
+        text = request.POST.get('text', '')
+        source_lang = request.POST.get('source_lang', '')
+        target_lang = request.POST.get('target_lang', '')
+
+        # Effectuer la traduction
+        translated_text = translator.translate(text, source_lang=source_lang, target_lang=target_lang)
+        return JsonResponse({"translated_text": translated_text}, status=200)
     
-    return JsonResponse({"error": "Only GET requests are allowed for this endpoint."}, status=405)
-
-
+    return JsonResponse({"error": "Only GET and POST requests are allowed for this endpoint."}, status=405)
