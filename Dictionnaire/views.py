@@ -1,22 +1,17 @@
-from logging import Logger
 from rest_framework.response import Response
 from rest_framework import generics
 from .models import *
 from .serializer import *
-from django.db.models import Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, permissions
 
 from rest_framework import status
 from . import client
 from rest_framework.pagination import PageNumberPagination
-from django.http import JsonResponse
 import pickle
-from easynmt import EasyNMT
-from django.views.generic import list
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
-
+import os
 
 class TraductionPagination(PageNumberPagination):
     page_size = 10
@@ -83,24 +78,36 @@ class SearchListView(generics.ListAPIView):
         )
         return Response(result, status=200)
 
-@api_view(['GET', 'POST'])# Corrected decorator usage with list of methods
+
+
+
+import joblib  # Si vous avez sauvegardé votre modèle avec joblib
+
+@api_view(['GET', 'POST'])
 def translate_text(request):
-    # with open("model.pkl", "rb") as pickle_in:  # Proper file opening and closing
-    #     translator = pickle.load(pickle_in)
-
-    translator = EasyNMT('opus-mt')
-
-    if request.method == 'POST':
-        text = request.POST.get('text')
-        translated_text = translator.translate(text, source_lang='fr', target_lang='en')
-        print("tranlated",translated_text)
-        return Response(translated_text, status=200)
-    
     if request.method == 'GET':
-        text = request.GET.get('text')
-        translated_text = translator.translate(text, source_lang='fr', target_lang='ln')
-        return Response({"translated_text": translated_text}, status=200)
+        text = request.GET.get('text', '')
+        source_lang = request.GET.get('source_lang', 'fr')
+        target_lang = request.GET.get('target_lang', 'en')
+        
+        # Charger le modèle depuis model.pkl
+        model_path = '/home/davy/Desktop/emane bile/emane/UIECC S8/lm/LM/model.pkl'  # Chemin vers votre modèle
+        model = joblib.load(model_path)  # Charger le modèle avec joblib
+        
+        # Effectuer la traduction
+        translated_text = translate_with_model(model, text, source_lang, target_lang)
+        
+        return JsonResponse({"translated_text": translated_text}, status=200)
+    
+    elif request.method == 'POST':
+        # Logique pour les requêtes POST si nécessaire
+        pass
+    
+    return JsonResponse({"error": "Only GET requests are allowed for this endpoint."}, status=405)
 
-
-    # Handle non-POST requests with an appropriate response
-    return Response({"error": "Only POST requests are allowed for this endpoint."}, status=405)
+def translate_with_model(model, text, source_lang, target_lang):
+    # Exemple de fonction pour la traduction avec votre modèle
+    # Ici, vous devez implémenter la logique de traduction en utilisant votre modèle
+    # Remarque : Ceci est un exemple fictif, adaptez-le à votre modèle réel
+    translated_text = model.translate(text, source_lang, target_lang)
+    return translated_text
