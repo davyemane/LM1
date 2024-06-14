@@ -1,3 +1,4 @@
+sacremoses
 easygui==0.98.3
 EasyNMT==2.0.2
 EasyProcess==1.1
