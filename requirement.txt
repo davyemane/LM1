@@ -17,7 +17,8 @@ djangorestframework-simplejwt==5.2.2
 Eel==0.14.0
 mysqlclient==2.2.0
 numpy==1.24.4
-transformers==4.12.0
+transformers
+huggingface-hub
 oauthlib==3.2.2
 openai==1.3.5
 PyJWT==2.6.0
