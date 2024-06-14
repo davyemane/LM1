@@ -7,10 +7,8 @@ from rest_framework import status, permissions
 from django.http import JsonResponse
 from rest_framework import status
 from . import client
-from rest_framework.pagination import PageNumberPagination
 import pickle
 from rest_framework.exceptions import ValidationError
-from django.contrib.auth.decorators import login_required
 import os
 from Dictionnaire import *
 
@@ -20,9 +18,7 @@ class TraductionPagination(PageNumberPagination):
     max_page_size = 100
 
 # Vue pour la récupération des traductions
-@login_required
 @api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
 def get_traductions(request, format=None):
     try:
         # Retrieve and validate parameters
