@@ -82,7 +82,12 @@ class SearchListView(generics.ListAPIView):
 
 
 import joblib  # Si vous avez sauvegardé votre modèle avec joblib
-
+def translate_with_model(model, text, source_lang, target_lang):
+    # Exemple de fonction pour la traduction avec votre modèle
+    # Ici, vous devez implémenter la logique de traduction en utilisant votre modèle
+    # Remarque : Ceci est un exemple fictif, adaptez-le à votre modèle réel
+    translated_text = model.translate(text, source_lang, target_lang)
+    return translated_text
 @api_view(['GET', 'POST'])
 def translate_text(request):
     if request.method == 'GET':
@@ -105,9 +110,4 @@ def translate_text(request):
     
     return JsonResponse({"error": "Only GET requests are allowed for this endpoint."}, status=405)
 
-def translate_with_model(model, text, source_lang, target_lang):
-    # Exemple de fonction pour la traduction avec votre modèle
-    # Ici, vous devez implémenter la logique de traduction en utilisant votre modèle
-    # Remarque : Ceci est un exemple fictif, adaptez-le à votre modèle réel
-    translated_text = model.translate(text, source_lang, target_lang)
-    return translated_text
+
