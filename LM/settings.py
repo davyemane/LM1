@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-h03@3dcysqb=&n3!x^1b%u9%7x(ep6oti%lwp1%@=3ebt@jfjj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'davyEmane.pythonanywhere.com', 'lm-beta.vercel.app']
 
 
 # Application definition
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     #'users',
     #'django_extensions',
     'rest_framework',
-    'rest_framework_pagination',
+    #'rest_framework_pagination',
     'django_filters',
     'corsheaders',  # Ajouté ici
     'algoliasearch_django',
@@ -153,6 +154,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
