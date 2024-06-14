@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: my-django-app
+    name: LM1
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python manage.py runserver 0.0.0.0:$PORT
+    startCommand: python manage.py runserver 100.20.92.101:$PORT
