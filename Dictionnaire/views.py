@@ -7,6 +7,8 @@ from rest_framework import status, permissions
 from django.http import JsonResponse
 from rest_framework import status
 from . import client
+from rest_framework.pagination import PageNumberPagination
+
 import pickle
 from rest_framework.exceptions import ValidationError
 import os
