@@ -3,7 +3,6 @@
 import os
 import sys
 
-
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LM.settings')
@@ -15,8 +14,13 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    
+    # Ajoutez ceci pour configurer le port
+    if 'RUN_MAIN' not in os.environ:
+        from django.core.management.commands.runserver import Command as runserver
+        runserver.default_port = os.environ.get('PORT', '8000')
+    
     execute_from_command_line(sys.argv)
-
 
 if __name__ == '__main__':
     main()
