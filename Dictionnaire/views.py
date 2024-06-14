@@ -84,27 +84,36 @@ class SearchListView(generics.ListAPIView):
 
 from easynmt import EasyNMT
 
+# Initialiser le traducteur EasyNMT une fois
+model = EasyNMT('opus-mt')
+
 @api_view(['GET', 'POST'])
 def translate_text(request):
-    # Initialiser le traducteur EasyNMT
-    translator = EasyNMT('opus-mt')
+    if request.method in ['GET', 'POST']:
+        text = request.GET.get('text', '') if request.method == 'GET' else request.POST.get('text', '')
+        source_lang = request.GET.get('source_lang', '') if request.method == 'GET' else request.POST.get('source_lang', '')
+        target_lang = request.GET.get('target_lang', '') if request.method == 'GET' else request.POST.get('target_lang', '')
 
-    if request.method == 'GET':
-        text = request.GET.get('text', '')
-        source_lang = request.GET.get('source_lang', '')
-        target_lang = request.GET.get('target_lang', '')
+        # Vérifier si le texte est une chaîne ou une liste de phrases
+        if isinstance(text, str):
+            # Traiter comme une seule phrase
+            texts = [text]
+        else:
+            # Traiter comme plusieurs phrases
+            texts = text
 
-        # Effectuer la traduction
-        translated_text = translator.translate(text, source_lang=source_lang, target_lang=target_lang)
-        return JsonResponse({"translated_text": translated_text}, status=200)
-    
-    elif request.method == 'POST':
-        text = request.POST.get('text', '')
-        source_lang = request.POST.get('source_lang', '')
-        target_lang = request.POST.get('target_lang', '')
+        try:
+            # Effectuer la traduction
+            translated_texts = model.translate(texts, source_lang=source_lang, target_lang=target_lang)
+            if isinstance(text, str):
+                # Retourner un seul texte traduit si l'entrée était une chaîne
+                translated_text = translated_texts[0]
+            else:
+                # Retourner une liste de textes traduits si l'entrée était une liste
+                translated_text = translated_texts
 
-        # Effectuer la traduction
-        translated_text = translator.translate(text, source_lang=source_lang, target_lang=target_lang)
-        return JsonResponse({"translated_text": translated_text}, status=200)
+            return JsonResponse({"translated_text": translated_text}, status=200)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
     
     return JsonResponse({"error": "Only GET and POST requests are allowed for this endpoint."}, status=405)
